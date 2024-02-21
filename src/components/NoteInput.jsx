@@ -37,4 +37,53 @@ class NoteInput extends React.Component {
       };
     });
   }
+
+  onSubmitEventHandler(event) {
+    event.preventDefault();
+
+    this.setState(
+      (prevState) => ({
+        ...prevState,
+        id: +new Date(),
+        createdAt: new Date().toISOString(),
+      }),
+      () => {
+        if (this.props.addNote) {
+          this.props.addNote(this.state);
+        }
+      }
+    );
+  }
+
+  render() {
+    return (
+      <form className="note-input" onSubmit={this.onSubmitEventHandler}>
+        <p className="note-input__title__char-limit">
+          {" "}
+          Sisa Karakter: {this.state.max_char - this.state.title.length}
+        </p>
+        <input
+          className="note-input__title"
+          type="text"
+          placeholder="Masukkan Judul"
+          value={this.state.title}
+          onChange={this.onTitleChangeEventHandler}
+        />
+        <textarea
+          className="note-input__body"
+          type="text"
+          placeholder="Masukkan Konten"
+          value={this.state.body}
+          onChange={this.onBodyChangeEventHandler}
+        />
+        <button type="submit">Buat</button>
+      </form>
+    );
+  }
 }
+
+NoteInput.propTypes = {
+  addNote: PropTypes.func.isRequired,
+};
+
+export default NoteInput;
