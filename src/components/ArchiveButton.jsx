@@ -1,5 +1,6 @@
 import React from "react";
 import PropTypes from "prop-types";
+import { IoArchiveSharp } from "react-icons/io5";
 
 function ArchiveButton({ id, archived, onArchive }) {
   return (
@@ -9,7 +10,7 @@ function ArchiveButton({ id, archived, onArchive }) {
       type="button"
       title="Arsipkan"
     >
-      {archived === false ? "ARSIPKAN" : "PINDAHKAN"}
+      {archived === false ? <IoArchiveSharp /> : <IoArchiveSharp />}
     </button>
   );
 }

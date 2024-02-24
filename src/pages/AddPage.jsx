@@ -12,7 +12,7 @@ function AddPage() {
   }
 
   return (
-    <section class="add-new-page">
+    <section className="add-new-page">
       <h2>Tambah Catatan</h2>
       <NoteInput addNote={onAddNoteHandler} />
     </section>

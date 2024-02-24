@@ -20,7 +20,7 @@ function NoteApp() {
       <main>
         <Routes>
           <Route path="/" element={<HomePage />} />
-          <Route path="/notes/add" element={<AddPage />} />
+          <Route path="/notes/new" element={<AddPage />} />
           <Route path="/archives" element={<ArchivePage />} />
           <Route path="/notes/:id" element={<DetailPage />} />
           <Route path="*" element={<NotFoundPage />} />

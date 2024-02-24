@@ -7,9 +7,7 @@ function Navigation() {
     <nav className="navigation">
       <ul>
         <li>
-          <Link to="/archives">
-            <IoArchiveSharp /> Arsip
-          </Link>
+          <Link to="/archives">Arsip</Link>
         </li>
       </ul>
     </nav>

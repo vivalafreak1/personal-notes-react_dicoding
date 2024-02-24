@@ -1,22 +1,22 @@
 :root {
-  --primary: #bb86fc;
-  --primary-variant: #3700b3;
-  --secondary: #03dac6;
-  --background: #121212;
-  --surface: #121212;
-  --error: #cf6679;
-  --warning: #f39c12;
-  --on-background: #ffffff;
-  --on-background-grey: #c7c7c7;
-  --on-surface: #ffffff;
+  --primary: #e91e63; /* Pink */
+  --primary-variant: #c2185b; /* Dark Pink */
+  --secondary: #ffeb3b; /* Yellow */
+  --background: #303030; /* Dark Grey */
+  --surface: #424242; /* Grey */
+  --error: #f44336; /* Red */
+  --warning: #ffc107; /* Amber */
+  --on-background: #ffffff; /* White */
+  --on-background-grey: #bdbdbd; /* Light Grey */
+  --on-surface: #ffffff; /* White */
 }
 
 [data-theme="light"] {
-  --background: #dddddd;
-  --suface: #ffffff;
-  --on-background: #333333;
-  --on-background-grey: #6d6d6d;
-  --on-surface: #333333;
+  --background: #f5f5f5; /* Light Grey */
+  --surface: #ffffff; /* White */
+  --on-background: #212121; /* Dark Grey */
+  --on-background-grey: #757575; /* Grey */
+  --on-surface: #212121; /* Dark Grey */
 }
 
 * {
@@ -31,13 +31,16 @@ a {
 
 body {
   font-family: "Inter", sans-serif;
+  color: var(--on-background);
+  background-color: var(--background);
 }
 
 .app-container {
-  color: var(--on-background);
-  background-color: var(--background);
   min-height: 100vh;
   transition: all ease-in-out 0.5s;
+  max-width: 1200px;
+  margin: 0 auto;
+  padding: 0 32px;
 }
 
 header {
@@ -61,7 +64,7 @@ header .navigation ul li {
 main {
   margin: 0 auto;
   padding: 32px 0;
-  width: 90%;
+  width: 100%;
   max-width: 1200px;
 }
 
@@ -91,6 +94,8 @@ main {
 
 .note-item__title {
   margin: 4px 0;
+  overflow: hidden;
+  text-overflow: ellipsis;
 }
 
 .note-item__createdAt {
@@ -303,35 +308,71 @@ main {
   margin-bottom: 48px;
 }
 
-.note-input input,
-.note-input textarea {
-  display: block;
-  width: 100%;
-}
-
-.note-input__title {
-  font-weight: bold;
+.note-input {
+  display: flex;
+  flex-direction: column;
+  gap: 10px;
+  max-width: 500px;
+  margin: 0 auto;
 }
 
 .note-input__title__char-limit {
-  font-size: 14px;
-  text-align: right;
-  color: #aaa;
+  font-size: 12px;
+  color: #666;
 }
 
 .note-input__body {
-  min-height: 175px;
+  resize: vertical;
+  min-height: 300px;
 }
 
-.note-input button {
-  display: block;
-  width: 100%;
-  padding: 8px;
-  background-color: transparent;
-  font-family: "Inter", sans-serif;
+.note-input__title,
+.note-input__body {
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+  font-size: 16px;
+  font-family: inherit;
+}
+
+.note-input__body:focus,
+.note-input__title:focus {
+  outline: none;
+  border-color: #007bff;
+}
+
+.note-input__body::placeholder,
+.note-input__title::placeholder {
+  color: #999;
+}
+
+.note-input__body:focus::placeholder,
+.note-input__title:focus::placeholder {
+  color: transparent;
+}
+
+.note-input__submit {
+  padding: 10px 20px;
+  background-color: #1e2022;
   color: white;
-  border: 1px solid #aaa;
-  border-radius: 4px;
-  font-weight: bold;
+  border: none;
+  border-radius: 5px;
   cursor: pointer;
+  font-size: 16px;
+  border: 2px solid whitesmoke;
+}
+
+.note-input__submit:hover {
+  background-color: #0056b3;
+}
+
+.note-item__action {
+  display: flex;
+  justify-content: flex-end;
+  align-items: flex-end;
+  gap: 10px;
+}
+
+.note-item__action > * {
+  margin-top: 10px;
 }

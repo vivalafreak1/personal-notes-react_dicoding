@@ -11,7 +11,7 @@ class NoteInput extends React.Component {
       body: "",
       createdAt: "",
       archived: false,
-      maxLength: 50,
+      maxLength: 25,
     };
 
     // Binding
@@ -33,7 +33,7 @@ class NoteInput extends React.Component {
     this.setState((prevState) => {
       return {
         ...prevState,
-        body: event.garget.value,
+        body: event.target.value,
       };
     });
   }
@@ -60,7 +60,7 @@ class NoteInput extends React.Component {
       <form className="note-input" onSubmit={this.onSubmitEventHandler}>
         <p className="note-input__title__char-limit">
           {" "}
-          Sisa Karakter: {this.state.max_char - this.state.title.length}
+          Sisa Karakter: {this.state.maxLength - this.state.title.length}
         </p>
         <input
           className="note-input__title"
@@ -76,7 +76,9 @@ class NoteInput extends React.Component {
           value={this.state.body}
           onChange={this.onBodyChangeEventHandler}
         />
-        <button type="submit">Buat</button>
+        <button className="note-input__submit" type="submit">
+          Buat
+        </button>
       </form>
     );
   }

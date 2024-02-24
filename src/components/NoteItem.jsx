@@ -22,8 +22,10 @@ function NoteItem({
         createdAt={createdAt}
         archived={archived}
       />
-      <ArchiveButton id={id} onArchive={onArchive} archived={archived} />
-      <DeleteButton id={id} onDelete={onDelete} />
+      <div className="note-item__action">
+        <ArchiveButton id={id} onArchive={onArchive} archived={archived} />
+        <DeleteButton id={id} onDelete={onDelete} />
+      </div>
     </article>
   );
 }

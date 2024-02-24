@@ -1,14 +1,17 @@
 import React from "react";
+import PropTypes from "prop-types";
 
 function SearchBar({ keyword, keywordChange }) {
   return (
-    <input
-      key="title"
-      type="text"
-      placeholder="Cari catatan...."
-      value={keyword}
-      onChange={(event) => keywordChange(event.target.value)}
-    />
+    <section className="search-bar">
+      <input
+        key="title"
+        type="text"
+        placeholder="Cari catatan...."
+        value={keyword}
+        onChange={(event) => keywordChange(event.target.value)}
+      />
+    </section>
   );
 }
 

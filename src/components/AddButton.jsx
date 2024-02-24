@@ -1,14 +1,14 @@
 import React from "react";
 import { Link } from "react-router-dom";
-import { IoMdAdd } from "react-icons/io";
+import { IoIosAdd } from "react-icons/io";
 
 function AddButton() {
   return (
-    <button className="action" type="button" title="Tambah">
-      <Link to="/notes/new">
-        <IoMdAdd />
-      </Link>
-    </button>
+    <Link to="/notes/new">
+      <button className="action" type="button" title="Tambah">
+        <IoIosAdd />
+      </button>
+    </Link>
   );
 }
 
