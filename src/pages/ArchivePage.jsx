@@ -5,6 +5,8 @@ import NoteList from "../components/NoteList";
 import SearchBar from "../components/SearchBar";
 import { deleteNote, getArchivedNotes, unarchiveNote } from "../utils/api";
 
+import { LocaleConsumer } from "../contexts/LocaleContext";
+
 function ArchivedPageWrapper() {
   const [searchParams, setSearchParams] = useSearchParams();
   const keyword = searchParams.get("keyword");
@@ -66,25 +68,36 @@ function ArchivePage({ defaultKeyword, keywordChange }) {
     .filter((note) => note.title.toLowerCase().includes(keyword.toLowerCase()));
 
   return (
-    <section>
-      <div>
-        <h2>Daftar Arsip Catatan</h2>
-        <SearchBar keyword={keyword} keywordChange={onKeywordChangeHandler} />
-      </div>
-      {loading ? (
-        <>
-          <h1>Loading</h1>
-          <p>Loading</p>
-          <p>Loading</p>
-        </>
-      ) : (
-        <NoteList
-          notes={filteredNotes}
-          onDelete={onDeleteHandler}
-          onArchive={onUnarchiveHandler}
-        />
-      )}
-    </section>
+    <LocaleConsumer>
+      {({ locale }) => {
+        return (
+          <section>
+            <div>
+              <h2>
+                {locale === "id" ? "Daftar Arsip Catatan" : "Archive Notes"}
+              </h2>
+              <SearchBar
+                keyword={keyword}
+                keywordChange={onKeywordChangeHandler}
+              />
+            </div>
+            {loading ? (
+              <>
+                <h1>Loading</h1>
+                <p>Loading</p>
+                <p>Loading</p>
+              </>
+            ) : (
+              <NoteList
+                notes={filteredNotes}
+                onDelete={onDeleteHandler}
+                onArchive={onUnarchiveHandler}
+              />
+            )}
+          </section>
+        );
+      }}
+    </LocaleConsumer>
   );
 }
 
