@@ -1,17 +1,47 @@
 import React from "react";
+import PropTypes from "prop-types";
 import { Link } from "react-router-dom";
-import { IoArchiveSharp } from "react-icons/io5";
+import { FiLogOut } from "react-icons/fi";
+import { LocaleConsumer } from "../contexts/LocaleContext";
 
-function Navigation() {
+import ThemeButton from "./ThemeButton";
+
+function Navigation({ logout, name }) {
   return (
-    <nav className="navigation">
-      <ul>
-        <li>
-          <Link to="/archives">Arsip</Link>
-        </li>
-      </ul>
-    </nav>
+    <LocaleConsumer>
+      {({ locale, toggleLocale }) => {
+        return (
+          <nav className="navigation">
+            <ul>
+              <li>
+                <ThemeButton />
+              </li>
+              <li>
+                <a className="navigation__archive" href="/notes/archive">
+                  {locale === "id" ? "Arsip" : "Archive"}
+                </a>
+              </li>
+              <li>
+                <button className="navigation__lang" onClick={toggleLocale}>
+                  {locale === "id" ? "English" : "Indonesia"}
+                </button>
+              </li>
+              <li>
+                <button className="navigation__logout" onClick={logout}>
+                  {name} <FiLogOut />
+                </button>
+              </li>
+            </ul>
+          </nav>
+        );
+      }}
+    </LocaleConsumer>
   );
 }
+
+Navigation.propTypes = {
+  logout: PropTypes.func.isRequired,
+  name: PropTypes.string.isRequired,
+};
 
 export default Navigation;

@@ -1,7 +1,7 @@
 import React, { useState, useEffect } from "react";
 import { useParams, useNavigate } from "react-router-dom";
 
-import { getNote, deleteNote, archiveNote } from "../utils/local-data";
+import { getNote, deleteNote, archiveNote } from "../utils/api";
 import { showFormattedDate } from "../utils/index";
 import DeleteButton from "../components/DeleteButton";
 import ArchiveButton from "../components/ArchiveButton";
@@ -22,13 +22,13 @@ function DetailPage() {
   }, [id]);
 
   const handleDelete = async () => {
-    await deleteNote(note.id);
+    await deleteNote(note.data.id);
     navigate("/");
     window.alert("Catatan berhasil dihapus!");
   };
 
   const handleArchive = async () => {
-    await archiveNote(note.id);
+    await archiveNote(note.data.id);
     navigate("/");
     window.alert("Catatan berhasil diarsip!");
   };
@@ -38,16 +38,17 @@ function DetailPage() {
   }
   return (
     <section className="detail-page">
-      <h3 class="detail-page__title">{note.title}</h3>
-      <p>{showFormattedDate(note.createdAt)}</p>
-      <div className="detail-page__body">{note.body}</div>
+      <h3 className="detail-page__title">{note.data.title}</h3>
+      <p>{showFormattedDate(note.data.createdAt)}</p>
+      <div className="detail-page__body">{note.data.body}</div>
+
       <div className="detail-page__action">
         <ArchiveButton
-          id={note.id}
+          id={note.data.id}
           onArchive={handleArchive}
-          archived={note.archived}
+          archived={note.data.archived}
         />
-        <DeleteButton id={note.id} onDelete={handleDelete} />
+        <DeleteButton id={note.data.id} onDelete={handleDelete} />
       </div>
     </section>
   );

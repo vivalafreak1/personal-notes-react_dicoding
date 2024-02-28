@@ -1,17 +1,14 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSearchParams } from "react-router-dom";
 import NoteList from "../components/NoteList";
 import SearchBar from "../components/SearchBar";
-import {
-  deleteNote,
-  getArchivedNotes,
-  unarchiveNote,
-} from "../utils/local-data";
+import { deleteNote, getArchivedNotes, unarchiveNote } from "../utils/api";
 
 function ArchivedPageWrapper() {
   const [searchParams, setSearchParams] = useSearchParams();
   const keyword = searchParams.get("keyword");
+
   function changeSearchParams(keyword) {
     setSearchParams({ keyword });
   }
@@ -21,78 +18,76 @@ function ArchivedPageWrapper() {
   );
 }
 
-class ArchivePage extends React.Component {
-  constructor(props) {
-    super(props);
+function ArchivePage({ defaultKeyword, keywordChange }) {
+  const [notes, setNotes] = useState([]);
+  const [loading, setLoading] = useState(true);
+  const [keyword, setKeyword] = useState(defaultKeyword || "");
 
-    this.state = {
-      notes: getArchivedNotes(),
-      keyword: props.defaultKeyword || "",
-    };
+  useEffect(() => {
+    async function fetchNotes() {
+      setLoading(true);
+      const { data } = await getArchivedNotes();
+      setNotes(data || []);
+      setTimeout(() => {
+        setLoading(false);
+      }, 400); // Menetapkan loading menjadi false setelah sekitar 1 detik
+    }
+    fetchNotes();
+  }, []);
 
-    this.onDeleteHandler = this.onDeleteHandler.bind(this);
-    this.onKeywordChangeHandler = this.onKeywordChangeHandler.bind(this);
-    this.onUnarchiveHandler = this.onUnarchiveHandler.bind(this);
-  }
+  const onDeleteHandler = async (id) => {
+    await deleteNote(id);
+    setLoading(true);
+    const { data } = await getArchivedNotes();
+    setNotes(data || []);
 
-  onDeleteHandler(id) {
-    deleteNote(id);
+    setLoading(false);
+  };
 
-    this.setState(() => {
-      return {
-        notes: getArchivedNotes(),
-      };
-    });
-  }
+  const onKeywordChangeHandler = (keyword) => {
+    setKeyword(keyword);
+    keywordChange(keyword);
+  };
 
-  onKeywordChangeHandler(keyword) {
-    this.setState(() => {
-      return {
-        keyword,
-      };
-    });
+  const onUnarchiveHandler = async (id) => {
+    await unarchiveNote(id);
+    setLoading(true);
+    const { data } = await getArchivedNotes();
+    setNotes(data || []);
 
-    this.props.keywordChange(keyword);
-  }
+    setLoading(false);
+  };
 
-  onUnarchiveHandler(id) {
-    unarchiveNote(id);
+  const filteredNotes = notes
+    .map((note) => ({
+      ...note,
+      createdAt: new Date(note.createdAt),
+    }))
+    .filter((note) => note.title.toLowerCase().includes(keyword.toLowerCase()));
 
-    this.setState(() => {
-      return {
-        notes: getArchivedNotes(),
-      };
-    });
-  }
-
-  render() {
-    const notes = this.state.notes
-      .map((note) => ({
-        ...note,
-        createdAt: new Date(note.createdAt),
-      }))
-      .filter((e) => {
-        return e.title.toLowerCase().includes(this.state.keyword.toLowerCase());
-      });
-
-    return (
-      <section>
-        <div>
-          <h2>Daftar Arsip Catatan</h2>
-          <SearchBar
-            keyword={this.state.keyword}
-            keywordChange={this.onKeywordChangeHandler}
-          />
-        </div>
+  return (
+    <section>
+      <div>
+        <h2>Daftar Arsip Catatan</h2>
+        <SearchBar keyword={keyword} keywordChange={onKeywordChangeHandler} />
+      </div>
+      {loading ? (
+        <>
+          <h1>Loading</h1>
+          <p>Loading</p>
+          <p>Loading</p>
+        </>
+      ) : (
         <NoteList
-          notes={notes}
-          onDelete={this.onDeleteHandler}
-          onArchive={this.onUnarchiveHandler}
+          notes={filteredNotes}
+          onDelete={onDeleteHandler}
+          onArchive={onUnarchiveHandler}
         />
-      </section>
-    );
-  }
+      )}
+    </section>
+  );
 }
+
 ArchivePage.propTypes = {
   defaultKeyword: PropTypes.string,
   keywordChange: PropTypes.func.isRequired,

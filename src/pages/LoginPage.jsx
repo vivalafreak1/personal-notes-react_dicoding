@@ -5,6 +5,8 @@ import LoginInput from "../components/LoginInput";
 import { login } from "../utils/api";
 import { useNavigate } from "react-router-dom";
 
+import { LocaleConsumer } from "../contexts/LocaleContext";
+
 function LoginPage({ loginSuccess }) {
   const navigate = useNavigate();
   async function onLogin({ email, password }) {
@@ -16,13 +18,26 @@ function LoginPage({ loginSuccess }) {
   }
 
   return (
-    <section className="login-page">
-      <h2>Silakan masuk untuk melanjutkan ...</h2>
-      <LoginInput login={onLogin} />
-      <p>
-        Belum punya akun? <Link to="/register">Daftar di sini.</Link>
-      </p>
-    </section>
+    <LocaleConsumer>
+      {({ locale }) => {
+        return (
+          <section className="login-page">
+            <h2>
+              {locale === "id"
+                ? "Silahkan masuk untuk melanjutkan..."
+                : "Please login to proceed..."}
+            </h2>
+            <LoginInput login={onLogin} />
+            <p>
+              {locale === "id" ? "Belum punya akun? " : "No account? "}
+              <Link to="/register">
+                {locale === "id" ? "Daftar di sini" : " Register here"}
+              </Link>
+            </p>
+          </section>
+        );
+      }}
+    </LocaleConsumer>
   );
 }
 

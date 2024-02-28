@@ -1,22 +1,22 @@
 :root {
-  --primary: #e91e63; /* Pink */
-  --primary-variant: #c2185b; /* Dark Pink */
-  --secondary: #ffeb3b; /* Yellow */
-  --background: #303030; /* Dark Grey */
-  --surface: #424242; /* Grey */
-  --error: #f44336; /* Red */
-  --warning: #ffc107; /* Amber */
-  --on-background: #ffffff; /* White */
-  --on-background-grey: #bdbdbd; /* Light Grey */
-  --on-surface: #ffffff; /* White */
+  --primary: #e91e63;
+  --primary-variant: #c2185b;
+  --secondary: #ffeb3b;
+  --background: #303030;
+  --surface: #424242;
+  --error: #f44336;
+  --warning: #ffc107;
+  --on-background: #ffffff;
+  --on-background-grey: #bdbdbd;
+  --on-surface: #ffffff;
 }
 
 [data-theme="light"] {
-  --background: #f5f5f5; /* Light Grey */
-  --surface: #ffffff; /* White */
-  --on-background: #212121; /* Dark Grey */
-  --on-background-grey: #757575; /* Grey */
-  --on-surface: #212121; /* Dark Grey */
+  --background: #f5f5f5;
+  --surface: #ffffff;
+  --on-background: #212121;
+  --on-background-grey: #757575;
+  --on-surface: #212121;
 }
 
 * {
@@ -375,4 +375,102 @@ main {
 
 .note-item__action > * {
   margin-top: 10px;
+}
+
+.login-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.login-input__email,
+.login-input__password {
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.login-input__button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.login-input__button:hover {
+  background-color: #0056b3;
+}
+
+.register-input {
+  display: flex;
+  flex-direction: column;
+}
+
+.register-input__name,
+.register-input__email,
+.register-input__password,
+.register-input__confirm-password {
+  margin: 10px;
+  padding: 10px;
+  border: 1px solid #ccc;
+  border-radius: 5px;
+}
+
+.register-input__button {
+  margin: 10px;
+  padding: 10px 20px;
+  background-color: #007bff;
+  color: white;
+  border: none;
+  border-radius: 5px;
+  cursor: pointer;
+}
+
+.register-input__button:hover {
+  background-color: #0056b3;
+}
+
+.theme-button {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 24px;
+  color: var(--on-background);
+}
+
+.theme-button:hover {
+  color: #666;
+}
+
+.theme-button:focus {
+  outline: none;
+}
+
+.navigation__lang,
+.navigation__logout,
+.navigation a {
+  background-color: transparent;
+  border: none;
+  cursor: pointer;
+  font-size: 16px;
+  color: var(--on-background);
+}
+
+.navigation__lang:hover,
+.navigation__logout:hover,
+.navigation a {
+  color: var(--on-background);
+}
+
+.navigation__lang:focus,
+.navigation__logout:focus,
+.navigation a {
+  outline: none;
+}
+
+.navigation a {
+  text-decoration: none;
 }

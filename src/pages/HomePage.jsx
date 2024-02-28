@@ -1,11 +1,12 @@
-import React from "react";
+import React, { useState, useEffect } from "react";
 import PropTypes from "prop-types";
 import { useSearchParams } from "react-router-dom";
 import NoteList from "../components/NoteList";
 import SearchBar from "../components/SearchBar";
 
-import { deleteNote, getActiveNotes, archiveNote } from "../utils/local-data";
+import { deleteNote, getActiveNotes, archiveNote } from "../utils/api";
 import AddButton from "../components/AddButton";
+import { LocaleConsumer } from "../contexts/LocaleContext";
 
 function HomePageWrapper() {
   const [searchParams, setSearchParams] = useSearchParams();
@@ -21,92 +22,94 @@ function HomePageWrapper() {
   );
 }
 
-class HomePage extends React.Component {
-  static propTypes = {
-    defaultKeyword: PropTypes.string,
-    keywordChange: PropTypes.func.isRequired,
-  };
+function HomePage({ defaultKeyword, keywordChange }) {
+  const [notes, setNotes] = useState([]);
+  const [keyword, setKeyword] = useState(defaultKeyword || "");
+  const [loading, setLoading] = useState(true);
 
-  constructor(props) {
-    super(props);
+  useEffect(() => {
+    async function fetchNotes() {
+      await new Promise((resolve) => setTimeout(resolve, 500));
+      const { data } = await getActiveNotes();
+      setNotes(data || []);
+      setLoading(false);
+    }
+    fetchNotes();
+  }, []);
 
-    this.state = {
-      notes: getActiveNotes(),
-      keyword: props.defaultKeyword || "",
-    };
-
-    this.onDeleteHandler = this.onDeleteHandler.bind(this);
-    this.onKeywordChangeHandler = this.onKeywordChangeHandler.bind(this);
-    this.onArchiveHandler = this.onArchiveHandler.bind(this);
-  }
-
-  onDeleteHandler(id) {
+  async function onDeleteHandler(id) {
     const isConfirmed = window.confirm(
       "Apakah yakin untuk menghapus notes ini?"
     );
-
-    if (isConfirmed) {
-      deleteNote(id);
-
-      // update the note state from data.js
-      this.setState(() => {
-        return {
-          notes: getActiveNotes(),
-        };
-      });
+    setLoading(true);
+    try {
+      if (isConfirmed) {
+        await deleteNote(id);
+        const { data } = await getActiveNotes();
+        setNotes(data || []);
+        // update the note state from data.js
+      }
+    } catch (error) {
+      console.error(error);
+    } finally {
+      setLoading(false);
     }
   }
 
-  onKeywordChangeHandler(keyword) {
-    this.setState(() => {
-      return {
-        keyword,
-      };
+  function onKeywordChangeHandler(keyword) {
+    setKeyword(keyword);
+    keywordChange(keyword);
+  }
+
+  async function onArchiveHandler(id) {
+    setLoading(true);
+    await archiveNote(id);
+    const { data } = await getActiveNotes();
+    setNotes(data || []);
+    setLoading(false);
+  }
+
+  const filteredNotes = notes
+    .map((note) => ({
+      ...note,
+      createdAt: new Date(note.createdAt),
+    }))
+    .filter((event) => {
+      return event.title.toLowerCase().includes(keyword.toLowerCase());
     });
 
-    this.props.keywordChange(keyword);
-  }
+  return (
+    <LocaleConsumer>
+      {({ locale }) => {
+        return (
+          <section className="homepage">
+            <h2>{locale === "id" ? "Daftar catatan" : "List notes"}</h2>
+            <SearchBar
+              keyword={keyword}
+              keywordChange={onKeywordChangeHandler}
+            />
 
-  onArchiveHandler(id) {
-    archiveNote(id);
-
-    this.setState(() => {
-      return {
-        notes: getActiveNotes(),
-      };
-    });
-  }
-
-  render() {
-    const notes = this.state.notes
-      .map((note) => ({
-        ...note,
-        createdAt: new Date(note.createdAt),
-      }))
-      .filter((event) => {
-        return event.title
-          .toLowerCase()
-          .includes(this.state.keyword.toLowerCase());
-      });
-
-    return (
-      <section className="homepage">
-        <h2>Daftar Catatan</h2>
-        <SearchBar
-          keyword={this.state.keyword}
-          keywordChange={this.onKeywordChangeHandler}
-        />
-        <NoteList
-          notes={notes}
-          onDelete={this.onDeleteHandler}
-          onArchive={this.onArchiveHandler}
-        />
-        <div className="homepage__action">
-          <AddButton />
-        </div>
-      </section>
-    );
-  }
+            {loading ? (
+              <>
+                <h1>Loading</h1>
+                <p>Loading</p>
+                <p>Loading</p>
+              </>
+            ) : (
+              <NoteList
+                notes={filteredNotes}
+                onDelete={onDeleteHandler}
+                onArchive={onArchiveHandler}
+              />
+            )}
+            <div className="homepage__action">
+              <AddButton />
+            </div>
+          </section>
+        );
+      }}
+    </LocaleConsumer>
+  );
 }
 
 HomePage.propTypes = {

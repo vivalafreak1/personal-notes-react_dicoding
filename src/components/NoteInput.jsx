@@ -1,6 +1,8 @@
 import React from "react";
 import PropTypes from "prop-types";
 
+import { LocaleConsumer } from "../contexts/LocaleContext";
+
 class NoteInput extends React.Component {
   constructor(props) {
     super(props);
@@ -57,29 +59,37 @@ class NoteInput extends React.Component {
 
   render() {
     return (
-      <form className="note-input" onSubmit={this.onSubmitEventHandler}>
-        <p className="note-input__title__char-limit">
-          {" "}
-          Sisa Karakter: {this.state.maxLength - this.state.title.length}
-        </p>
-        <input
-          className="note-input__title"
-          type="text"
-          placeholder="Masukkan Judul"
-          value={this.state.title}
-          onChange={this.onTitleChangeEventHandler}
-        />
-        <textarea
-          className="note-input__body"
-          type="text"
-          placeholder="Masukkan Konten"
-          value={this.state.body}
-          onChange={this.onBodyChangeEventHandler}
-        />
-        <button className="note-input__submit" type="submit">
-          Buat
-        </button>
-      </form>
+      <LocaleConsumer>
+        {({ locale }) => {
+          return (
+            <form className="note-input" onSubmit={this.onSubmitEventHandler}>
+              <p className="note-input__title__char-limit">
+                {locale === "id" ? "Sisa karakter: " : "Character left: "}
+                {this.state.maxLength - this.state.title.length}
+              </p>
+              <input
+                className="note-input__title"
+                type="text"
+                placeholder={locale === "id" ? "Masukkan Judul" : "Add Title"}
+                value={this.state.title}
+                onChange={this.onTitleChangeEventHandler}
+              />
+              <textarea
+                className="note-input__body"
+                type="text"
+                placeholder={
+                  locale === "id" ? "Masukkan Konten" : "Add Content"
+                }
+                value={this.state.body}
+                onChange={this.onBodyChangeEventHandler}
+              />
+              <button className="note-input__submit" type="submit">
+                {locale === "id" ? "Buat" : "Create"}
+              </button>
+            </form>
+          );
+        }}
+      </LocaleConsumer>
     );
   }
 }

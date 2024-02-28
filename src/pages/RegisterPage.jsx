@@ -3,6 +3,8 @@ import { Link, useNavigate } from "react-router-dom";
 import RegisterInput from "../components/RegisterInput";
 import { register } from "../utils/api";
 
+import { LocaleConsumer } from "../contexts/LocaleContext";
+
 function RegisterPage() {
   const navigate = useNavigate();
   const [loading, setLoading] = useState(false);
@@ -23,15 +25,24 @@ function RegisterPage() {
   }
 
   return (
-    <section className="register-page">
-      <h2>Daftar akun baru</h2>
-      {error && <p>{error}</p>}
-      <RegisterInput register={onRegisterHandler} />
-      {loading && <p>Loading...</p>}
-      <p>
-        Kembali ke <Link to="/">Masuk</Link>
-      </p>
-    </section>
+    <LocaleConsumer>
+      {({ locale }) => {
+        return (
+          <section className="register-page">
+            <h2>
+              {locale === "id" ? "Daftar akun baru" : "Register your account"}
+            </h2>
+            {error && <p>{error}</p>}
+            <RegisterInput register={onRegisterHandler} />
+            {loading && <p>Loading...</p>}
+            <p>
+              {locale === "id" ? "Kembali ke " : "Back To "}
+              <Link to="/">{locale === "id" ? "Masuk" : "Login"}</Link>
+            </p>
+          </section>
+        );
+      }}
+    </LocaleConsumer>
   );
 }
 
